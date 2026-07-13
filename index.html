@@ -92,6 +92,28 @@
 
   /* COVER */
   #cover{ padding-top:8px; }
+  .cover-grid{ display:grid; grid-template-columns:1fr 240px; gap:48px; align-items:start; }
+  .portrait-wrap{ position:relative; }
+  .portrait-frame{ position:relative; padding:14px; }
+  .portrait-frame .corner{ position:absolute; width:16px; height:16px; }
+  .portrait-frame .corner.tl{ top:0; left:0; border-top:1px solid var(--muted); border-left:1px solid var(--muted); }
+  .portrait-frame .corner.tr{ top:0; right:0; border-top:1px solid var(--muted); border-right:1px solid var(--muted); }
+  .portrait-frame .corner.bl{ bottom:0; left:0; border-bottom:1px solid var(--muted); border-left:1px solid var(--muted); }
+  .portrait-frame .corner.br{ bottom:0; right:0; border-bottom:1px solid var(--muted); border-right:1px solid var(--muted); }
+  .portrait{
+    width:100%; aspect-ratio:1/1; object-fit:cover; object-position:top;
+    filter:grayscale(35%) contrast(1.08) brightness(0.96);
+  }
+  .portrait-cap{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.04em;
+    margin-top:10px; padding-top:8px; border-top:1px solid var(--line);
+  }
+  .portrait-cap .fig{ color:var(--red); }
+  .portrait-sub{
+    font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--muted);
+    text-transform:uppercase; letter-spacing:0.06em; margin-top:3px;
+  }
   .thesis{
     font-size:clamp(1.9rem, 4.4vw, 3rem);
     font-weight:700;
@@ -188,6 +210,8 @@
     .parts-list{ grid-template-columns:1fr; }
     .dossier-row{ grid-template-columns:64px 1fr; gap:14px; }
     .dossier-thumb{ width:64px; height:64px; }
+    .cover-grid{ grid-template-columns:1fr; }
+    .cover-grid .portrait-wrap{ width:180px; order:-1; margin-bottom:12px; }
   }
   @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
 </style>
@@ -220,18 +244,31 @@
   <div class="doc">
 
     <section id="cover">
-      <h1 class="thesis">Trained to build machines. Now I build <span class="accent">software.</span></h1>
-      <p class="sub">I run Layal Digital, a full-stack development and AI automation studio in Doha — handling business development and delivery myself, alongside freelance client work on Upwork. Before software, I trained as a mechanical engineer, and it still shows in how I work: define the spec, respect the constraints, test before you trust it.</p>
+      <div class="cover-grid">
+        <div>
+          <h1 class="thesis">Trained to build machines. Now I build <span class="accent">software.</span></h1>
+          <p class="sub">I run Layal Digital, a full-stack development and AI automation studio in Doha — handling business development and delivery myself, alongside freelance client work on Upwork. Before software, I trained as a mechanical engineer, and it still shows in how I work: define the spec, respect the constraints, test before you trust it.</p>
 
-      <div class="spec-strip">
-        <div class="spec-item">
-          <span class="k">Degree</span>
-          <span class="v redline">BSc Mechanical Engineering<span class="redline-mark"></span></span>
-          <span class="redline-note">↳ where this actually started</span>
+          <div class="spec-strip">
+            <div class="spec-item">
+              <span class="k">Degree</span>
+              <span class="v redline">BSc Mechanical Engineering<span class="redline-mark"></span></span>
+              <span class="redline-note">↳ where this actually started</span>
+            </div>
+            <div class="spec-item"><span class="k">Certification</span><span class="v">Cisco — Advanced Python Programming</span></div>
+            <div class="spec-item"><span class="k">Status</span><span class="v">Valid Qatar ID · sponsorship-eligible</span></div>
+            <div class="spec-item"><span class="k">Languages</span><span class="v">English, Urdu, Pashto, Arabic (basic)</span></div>
+          </div>
         </div>
-        <div class="spec-item"><span class="k">Certification</span><span class="v">Cisco — Advanced Python Programming</span></div>
-        <div class="spec-item"><span class="k">Status</span><span class="v">Valid Qatar ID · sponsorship-eligible</span></div>
-        <div class="spec-item"><span class="k">Languages</span><span class="v">English, Urdu, Pashto, Arabic (basic)</span></div>
+        <div class="portrait-wrap">
+          <div class="portrait-frame">
+            <span class="corner tl"></span><span class="corner tr"></span>
+            <img class="portrait" src="assets/bilal-portrait.png" alt="Bilal Hassan">
+            <span class="corner bl"></span><span class="corner br"></span>
+          </div>
+          <div class="portrait-cap"><span class="fig">Fig. 01</span><span>B. Hassan</span></div>
+          <div class="portrait-sub">Doha, QA — Rev. 2026</div>
+        </div>
       </div>
     </section>
 
