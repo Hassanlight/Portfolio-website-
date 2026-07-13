@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilal Hassan — Full-Stack &amp; AI Automation Engineer</title>
+<meta name="description" content="Bilal Hassan — Founder of Layal Digital. Full-stack development and AI automation, Doha, Qatar.">
+<meta property="og:title" content="Bilal Hassan — Full-Stack &amp; AI Automation Engineer">
+<meta property="og:description" content="Founder of Layal Digital. Full-stack development and AI automation, Doha, Qatar.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Bilal Hassan",
+  "jobTitle": "Founder, Full-Stack Developer & AI Automation Engineer",
+  "worksFor": { "@type": "Organization", "name": "Layal Digital" },
+  "address": { "@type": "PostalAddress", "addressLocality": "Doha", "addressCountry": "QA" },
+  "email": "mailto:hassanlight11@gmail.com",
+  "telephone": "+974-3045-6488",
+  "sameAs": ["https://www.linkedin.com/in/bilal-hassan-783249231"],
+  "knowsLanguage": ["English", "Urdu", "Pashto", "Arabic"]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#141414;
+    --black-2:#1C1C1B;
+    --line: rgba(237,234,228,0.13);
+    --paper:#EDEAE4;
+    --muted:#938D84;
+    --red:#AB3B2E;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--black);
+    color:var(--paper);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--red); color:var(--paper); }
+  a{ color:inherit; text-decoration:none; }
+  :focus-visible{ outline:2px solid var(--red); outline-offset:3px; }
+  h1,h2,h3{ font-family:'IBM Plex Sans Condensed', sans-serif; letter-spacing:0.01em; }
+  img{ display:block; max-width:100%; }
+
+  /* ============ RAIL (title block) ============ */
+  .rail{
+    position:fixed; top:0; left:0; bottom:0; width:264px;
+    border-right:1px solid var(--line);
+    background:var(--black-2);
+    padding:32px 26px;
+    display:flex; flex-direction:column;
+    z-index:40;
+  }
+  .rail-name{ font-size:19px; font-weight:700; line-height:1.25; margin-bottom:4px; }
+  .rail-role{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted); letter-spacing:0.04em; margin-bottom:28px; }
+  .rail-field{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
+  .rail-value{ font-size:13px; margin-bottom:16px; }
+  .rail-nav{ margin-top:8px; border-top:1px solid var(--line); padding-top:20px; }
+  .rail-nav a{
+    display:flex; gap:10px; align-items:baseline;
+    font-size:13.5px; padding:8px 0; color:var(--muted);
+    transition:color .15s ease;
+  }
+  .rail-nav a:hover, .rail-nav a:focus-visible{ color:var(--paper); }
+  .rail-nav .n{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--red); }
+  .rail-foot{ margin-top:auto; font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--muted); padding-top:20px; border-top:1px solid var(--line); }
+
+  /* ============ MAIN DOC ============ */
+  main{ margin-left:264px; }
+  .doc{ max-width:760px; padding:72px 56px 100px; }
+
+  .foldline{
+    display:flex; align-items:center; gap:14px;
+    margin:0 0 40px;
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted);
+    letter-spacing:0.08em; text-transform:uppercase;
+  }
+  .foldline::after{ content:''; flex:1; height:1px; background:var(--line); }
+  .foldline .n{ color:var(--red); }
+
+  section{ padding-bottom:88px; }
+  section:last-of-type{ padding-bottom:40px; }
+
+  /* COVER */
+  #cover{ padding-top:8px; }
+  .thesis{
+    font-size:clamp(1.9rem, 4.4vw, 3rem);
+    font-weight:700;
+    line-height:1.14;
+    max-width:16ch;
+    margin-bottom:22px;
+  }
+  .thesis .accent{ color:var(--red); }
+  .sub{ color:var(--muted); max-width:56ch; font-size:17px; margin-bottom:40px; }
+
+  .spec-strip{
+    display:flex; flex-wrap:wrap; gap:0;
+    border-top:1px solid var(--line);
+  }
+  .spec-item{
+    flex:1 1 220px;
+    padding:16px 20px 16px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .spec-item .k{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; display:block; margin-bottom:5px; }
+  .spec-item .v{ font-size:14.5px; }
+
+  .redline{ position:relative; display:inline-block; }
+  .redline-mark{
+    position:absolute; left:-6px; top:-4px; right:-8px; bottom:-2px;
+    border:1.6px solid var(--red);
+    border-radius:50% / 40%;
+    transform:rotate(-2deg);
+    pointer-events:none;
+  }
+  .redline-note{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--red);
+    display:block; margin-top:6px; padding-left:2px;
+  }
+
+  /* DOSSIER rows */
+  .dossier-row{
+    display:grid; grid-template-columns:96px 1fr; gap:22px;
+    padding:24px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .dossier-row:first-child{ border-top:1px solid var(--line); }
+  .dossier-thumb{ width:96px; height:96px; object-fit:cover; border:1px solid var(--line); background:var(--black-2); }
+  .dossier-idx{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--red); padding-top:2px; }
+  .dossier-h{ display:flex; flex-wrap:wrap; align-items:baseline; gap:10px; margin-bottom:8px; }
+  .dossier-h h3{ font-size:17px; font-weight:600; }
+  .dossier-status{
+    font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--muted); border:1px solid var(--line); padding:3px 8px;
+  }
+  .dossier-desc{ color:var(--muted); font-size:14.5px; max-width:56ch; margin-bottom:10px; }
+  .dossier-tags{ display:flex; flex-wrap:wrap; gap:8px; }
+  .dossier-tags span{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--muted); }
+  .dossier-tags span::before{ content:'· '; color:var(--red); }
+  .dossier-tags span:first-child::before{ content:''; }
+  .dossier-meta{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--red); white-space:nowrap; padding-top:2px; }
+  .work-note{ color:var(--muted); font-size:13.5px; margin-top:24px; }
+
+  /* CAPABILITIES */
+  .cap-sub{ font-size:12px; font-family:'IBM Plex Mono', monospace; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin:28px 0 4px; }
+  .cap-sub:first-child{ margin-top:0; }
+  .parts-list{ display:grid; grid-template-columns:1fr 1fr; }
+  .parts-list div{ padding:12px 16px 12px 0; border-bottom:1px solid var(--line); font-size:14px; display:flex; justify-content:space-between; gap:8px; }
+  .parts-list div span{ color:var(--muted); font-family:'IBM Plex Mono', monospace; font-size:11px; }
+  .service-line{ padding:16px 0; border-bottom:1px solid var(--line); }
+  .service-line h3{ font-size:15px; font-weight:600; margin-bottom:6px; }
+  .service-line p{ color:var(--muted); font-size:13.5px; max-width:52ch; }
+
+  /* CONTACT */
+  .contact-close{ font-size:1.5rem; font-weight:700; max-width:20ch; margin-bottom:18px; }
+  .contact-list a, .contact-list div{
+    display:flex; align-items:baseline; gap:16px;
+    padding:14px 0; border-bottom:1px solid var(--line);
+    font-size:17px; font-weight:600;
+  }
+  .contact-list a:hover{ color:var(--red); }
+  .contact-list .k{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted); text-transform:uppercase; width:70px; flex-shrink:0; font-weight:400; }
+
+  @media (max-width:900px){
+    .rail{
+      position:sticky; width:auto; height:auto; inset:auto;
+      flex-direction:row; align-items:center; flex-wrap:wrap;
+      padding:16px 20px; gap:4px 18px;
+      border-right:none; border-bottom:1px solid var(--line);
+      top:0;
+    }
+    .rail-role, .rail-field, .rail-value{ display:none; }
+    .rail-name{ margin:0; font-size:16px; }
+    .rail-nav{ border-top:none; padding-top:0; margin:0; display:flex; gap:4px; overflow-x:auto; flex:1 1 100%; order:3; }
+    .rail-nav a{ padding:6px 10px 6px 0; font-size:12.5px; white-space:nowrap; }
+    .rail-foot{ display:none; }
+    main{ margin-left:0; }
+    .doc{ padding:44px 22px 70px; }
+    .parts-list{ grid-template-columns:1fr; }
+    .dossier-row{ grid-template-columns:64px 1fr; gap:14px; }
+    .dossier-thumb{ width:64px; height:64px; }
+  }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+
+<nav class="rail" aria-label="Primary">
+  <div class="rail-name">Bilal Hassan</div>
+  <div class="rail-role">Founder — Layal Digital</div>
+
+  <div class="rail-field">Location</div>
+  <div class="rail-value">Doha, Qatar</div>
+  <div class="rail-field">Dwg. No.</div>
+  <div class="rail-value">LD—2026</div>
+  <div class="rail-field">Rev.</div>
+  <div class="rail-value">04 — Jul 2026</div>
+
+  <div class="rail-nav">
+    <a href="#cover"><span class="n">01</span> Cover</a>
+    <a href="#work"><span class="n">02</span> Work</a>
+    <a href="#capabilities"><span class="n">03</span> Capabilities</a>
+    <a href="#experience"><span class="n">04</span> Experience</a>
+    <a href="#contact"><span class="n">05</span> Contact</a>
+  </div>
+
+  <div class="rail-foot">EN · UR · PS · AR (basic)<br>Sponsorship-eligible, Qatar</div>
+</nav>
+
+<main>
+  <div class="doc">
+
+    <section id="cover">
+      <h1 class="thesis">Trained to build machines. Now I build <span class="accent">software.</span></h1>
+      <p class="sub">I run Layal Digital, a full-stack development and AI automation studio in Doha — handling business development and delivery myself, alongside freelance client work on Upwork. Before software, I trained as a mechanical engineer, and it still shows in how I work: define the spec, respect the constraints, test before you trust it.</p>
+
+      <div class="spec-strip">
+        <div class="spec-item">
+          <span class="k">Degree</span>
+          <span class="v redline">BSc Mechanical Engineering<span class="redline-mark"></span></span>
+          <span class="redline-note">↳ where this actually started</span>
+        </div>
+        <div class="spec-item"><span class="k">Certification</span><span class="v">Cisco — Advanced Python Programming</span></div>
+        <div class="spec-item"><span class="k">Status</span><span class="v">Valid Qatar ID · sponsorship-eligible</span></div>
+        <div class="spec-item"><span class="k">Languages</span><span class="v">English, Urdu, Pashto, Arabic (basic)</span></div>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="foldline"><span class="n">02</span> Selected work</div>
+
+      <div class="dossier-row">
+        <img class="dossier-thumb" src="assets/sehatkebaat.jpg" alt="Sehat Ke Baat healthcare app screens">
+        <div>
+          <div class="dossier-h"><h3>Sehat Ke Baat</h3><span class="dossier-status">Upwork · Client build</span></div>
+          <p class="dossier-desc">Healthcare mobile app — find verified doctors nearby, book appointments in one tap, order medicine online with fast delivery.</p>
+          <div class="dossier-tags"><span>Flutter</span><span>Healthcare</span><span>100+ screens</span></div>
+        </div>
+      </div>
+
+      <div class="dossier-row">
+        <img class="dossier-thumb" src="assets/ondemand_marketplace.jpg" alt="HandyQ on-demand services app screens">
+        <div>
+          <div class="dossier-h"><h3>HandyQ</h3><span class="dossier-status">Upwork · Client build</span></div>
+          <p class="dossier-desc">On-demand services marketplace app — category browsing, task booking, and provider discovery in one mobile flow.</p>
+          <div class="dossier-tags"><span>Flutter</span><span>Marketplace</span><span>iOS &amp; Android</span></div>
+        </div>
+      </div>
+
+      <div class="dossier-row">
+        <img class="dossier-thumb" src="assets/stag_nfc.jpg" alt="Stag NFC digital business card app screens">
+        <div>
+          <div class="dossier-h"><h3>Stag NFC</h3><span class="dossier-status">Upwork · Client build</span></div>
+          <p class="dossier-desc">Digital business card app — tap an NFC card to instantly share a personal profile, contact details, and social links.</p>
+          <div class="dossier-tags"><span>Flutter</span><span>NFC</span><span>Networking</span></div>
+        </div>
+      </div>
+
+      <div class="dossier-row">
+        <img class="dossier-thumb" src="assets/pandorabiz.jpg" alt="PandoraBiz e-commerce app screens">
+        <div>
+          <div class="dossier-h"><h3>PandoraBiz</h3><span class="dossier-status">Upwork · Client build</span></div>
+          <p class="dossier-desc">E-commerce app combining a full product catalog with mentorship content, films, and articles in one shopping experience.</p>
+          <div class="dossier-tags"><span>Flutter</span><span>E-commerce</span></div>
+        </div>
+      </div>
+
+      <div class="dossier-row">
+        <img class="dossier-thumb" src="assets/construction_estimating.jpg" alt="Aussie Takeoff construction estimating platform screens">
+        <div>
+          <div class="dossier-h"><h3>Aussie Takeoff</h3><span class="dossier-status">Upwork · Client build</span></div>
+          <p class="dossier-desc">Precision construction estimating platform for winning bids — standards-compliant estimating for projects across Australia, New Zealand, and Pakistan.</p>
+          <div class="dossier-tags"><span>Full-stack web</span><span>Construction tech</span></div>
+        </div>
+      </div>
+
+      <div class="dossier-row">
+        <img class="dossier-thumb" src="assets/pyncode.jpg" alt="Pyncode AI-powered digital solutions website">
+        <div>
+          <div class="dossier-h"><h3>Pyncode</h3><span class="dossier-status">Upwork · Client build</span></div>
+          <p class="dossier-desc">Marketing site for an AI automation and software development studio — service pages, consultation booking, and brand system.</p>
+          <div class="dossier-tags"><span>Web design</span><span>AI automation branding</span></div>
+        </div>
+      </div>
+
+      <p class="work-note">A curated six from an active Upwork practice spanning healthcare, marketplace, e-commerce, construction tech, and NFC/networking apps — more available on request.</p>
+    </section>
+
+    <section id="capabilities">
+      <div class="foldline"><span class="n">03</span> Capabilities</div>
+
+      <div class="cap-sub">Stack</div>
+      <div class="parts-list">
+        <div>Flutter <span>Mobile</span></div>
+        <div>Next.js / React <span>FE</span></div>
+        <div>Python <span>Backend</span></div>
+        <div>Supabase <span>Data</span></div>
+        <div>n8n <span>Automation</span></div>
+        <div>Tailwind CSS <span>Style</span></div>
+        <div>Vercel <span>Hosting</span></div>
+        <div>Agent systems <span>AI</span></div>
+      </div>
+
+      <div class="cap-sub">Services</div>
+      <div class="service-line">
+        <h3>Full-stack web &amp; mobile</h3>
+        <p>Product builds from spec to deploy — Flutter for mobile, Next.js and React on the web.</p>
+      </div>
+      <div class="service-line">
+        <h3>AI automation &amp; agents</h3>
+        <p>Workflow automation and multi-agent systems that take real work off a team's plate.</p>
+      </div>
+      <div class="service-line">
+        <h3>Business documents</h3>
+        <p>CVs, proposals, and pitch decks written and designed to close, not just look tidy.</p>
+      </div>
+      <div class="service-line">
+        <h3>Technical consulting</h3>
+        <p>Architecture and build-plan advice for teams scoping a new product or system.</p>
+      </div>
+    </section>
+
+    <section id="experience">
+      <div class="foldline"><span class="n">04</span> Experience</div>
+
+      <div class="dossier-row" style="grid-template-columns:52px 1fr;">
+        <div class="dossier-idx">—</div>
+        <div>
+          <div class="dossier-h"><h3>Full-Stack Developer &amp; AI Automation Lead</h3></div>
+          <p class="dossier-desc">Layal Digital, Doha · Founder — present</p>
+        </div>
+      </div>
+      <div class="dossier-row" style="grid-template-columns:52px 1fr;">
+        <div class="dossier-idx">—</div>
+        <div>
+          <div class="dossier-h"><h3>Freelance Flutter &amp; Full-Stack Developer</h3></div>
+          <p class="dossier-desc">Upwork · Client delivery across healthcare, e-commerce, marketplace, and construction-tech apps.</p>
+        </div>
+      </div>
+      <div class="dossier-row" style="grid-template-columns:52px 1fr;">
+        <div class="dossier-idx">—</div>
+        <div>
+          <div class="dossier-h"><h3>Operations Coordinator</h3></div>
+          <p class="dossier-desc">Al Eteqaq Law Firm, Doha · Coordinated operations and supported internal case-management tooling.</p>
+        </div>
+      </div>
+      <div class="dossier-row" style="grid-template-columns:52px 1fr;">
+        <div class="dossier-idx">—</div>
+        <div>
+          <div class="dossier-h"><h3>Retail Supervisor</h3></div>
+          <p class="dossier-desc">Al Meera Consumer Goods, Qatar · Supervised store operations, staff, and inventory.</p>
+        </div>
+      </div>
+      <div class="dossier-row" style="grid-template-columns:52px 1fr;">
+        <div class="dossier-idx">—</div>
+        <div>
+          <div class="dossier-h"><h3>Store Manager</h3></div>
+          <p class="dossier-desc">Imtiaz Mart, Pakistan · Day-to-day store management, staffing, and stock.</p>
+        </div>
+      </div>
+      <div class="dossier-row" style="grid-template-columns:52px 1fr;">
+        <div class="dossier-idx">—</div>
+        <div>
+          <div class="dossier-h"><h3>Customer Support Representative</h3></div>
+          <p class="dossier-desc">Smart Brains &amp; Touchstone Communications · Inbound and outbound call-centre operations.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="foldline"><span class="n">05</span> Contact</div>
+      <p class="contact-close">Building something? Or hiring? Let's talk.</p>
+      <div class="contact-list">
+        <a href="https://www.linkedin.com/in/bilal-hassan-783249231" target="_blank" rel="noopener"><span class="k">LinkedIn</span> bilal-hassan-783249231</a>
+        <a href="mailto:hassanlight11@gmail.com"><span class="k">Email</span> hassanlight11@gmail.com</a>
+        <a href="tel:+97430456488"><span class="k">Phone</span> +974 3045 6488</a>
+        <div><span class="k">Based</span> Doha, Qatar</div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+</body>
+</html>
