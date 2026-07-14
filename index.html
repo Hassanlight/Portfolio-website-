@@ -282,7 +282,86 @@
     }
   }
 
-  /* ============ EXTRA SMALL SCREENS ============ */
+  /* ============ ACTIVE NAV STATE ============ */
+  .rail-nav a.active{ color:var(--paper); }
+  .rail-nav a.active .n{ color:var(--paper); }
+  .rail-nav a{ position:relative; }
+  .rail-nav a.active::before{
+    content:''; position:absolute; left:-26px; top:50%; width:14px; height:1px;
+    background:var(--red); transform:translateY(-50%);
+  }
+  @media (max-width:900px){ .rail-nav a.active::before{ display:none; } .rail-nav a.active{ border-bottom:1px solid var(--red); } }
+
+  /* ============ CAD CURSOR HUD (fine-pointer desktop only) ============ */
+  .cad-crosshair{
+    position:fixed; top:0; left:0; pointer-events:none; z-index:200;
+    opacity:0; transition:opacity .3s ease;
+  }
+  .cad-crosshair.live{ opacity:0.5; }
+  .cad-crosshair .h-line, .cad-crosshair .v-line{
+    position:fixed; background:var(--red); pointer-events:none;
+  }
+  .cad-crosshair .h-line{ left:0; right:0; height:1px; }
+  .cad-crosshair .v-line{ top:0; bottom:0; width:1px; }
+  .cad-hud{
+    position:fixed; bottom:18px; right:18px; z-index:200;
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--muted);
+    background:rgba(28,27,27,0.7);
+    backdrop-filter:blur(10px) saturate(140%); -webkit-backdrop-filter:blur(10px) saturate(140%);
+    border:1px solid var(--line); padding:8px 12px;
+    opacity:0; transition:opacity .3s ease; letter-spacing:0.03em;
+    pointer-events:none;
+  }
+  .cad-hud.live{ opacity:1; }
+  .cad-hud .lbl{ color:var(--red); }
+  @media (max-width:900px){ .cad-crosshair, .cad-hud{ display:none; } }
+
+  /* ============ COMMAND PALETTE ============ */
+  .cmdk-launcher{
+    position:fixed; bottom:18px; left:18px; z-index:200;
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--muted);
+    background:rgba(28,27,27,0.7);
+    backdrop-filter:blur(10px) saturate(140%); -webkit-backdrop-filter:blur(10px) saturate(140%);
+    border:1px solid var(--line); padding:8px 12px;
+    cursor:pointer; letter-spacing:0.03em;
+  }
+  .cmdk-launcher:hover{ border-color:rgba(171,59,46,0.4); color:var(--paper); }
+  .cmdk-launcher kbd{ font-family:inherit; color:var(--red); }
+  @media (max-width:900px){ .cmdk-launcher{ display:none; } }
+
+  .cmdk-overlay{
+    position:fixed; inset:0; z-index:300;
+    background:rgba(10,10,10,0.55);
+    backdrop-filter:blur(4px);
+    display:flex; align-items:flex-start; justify-content:center;
+    padding-top:14vh;
+    opacity:0; pointer-events:none; transition:opacity .2s ease;
+  }
+  .cmdk-overlay.open{ opacity:1; pointer-events:auto; }
+  .cmdk-box{
+    width:min(560px, 88vw);
+    background:rgba(28,27,27,0.85);
+    backdrop-filter:blur(18px) saturate(160%); -webkit-backdrop-filter:blur(18px) saturate(160%);
+    border:1px solid var(--line);
+    box-shadow:0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .cmdk-input{
+    width:100%; background:transparent; border:none; border-bottom:1px solid var(--line);
+    padding:16px 18px; font-family:'IBM Plex Mono', monospace; font-size:14px; color:var(--paper);
+  }
+  .cmdk-input:focus{ outline:none; }
+  .cmdk-list{ max-height:44vh; overflow-y:auto; }
+  .cmdk-item{
+    padding:12px 18px; font-size:14px; color:var(--muted);
+    display:flex; justify-content:space-between; align-items:baseline; cursor:pointer;
+    border-bottom:1px solid var(--line);
+  }
+  .cmdk-item .tag{ font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--red); text-transform:uppercase; letter-spacing:0.05em; }
+  .cmdk-item.sel{ background:rgba(171,59,46,0.1); color:var(--paper); }
+  .cmdk-hint{
+    padding:10px 18px; font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--muted);
+    text-transform:uppercase; letter-spacing:0.05em;
+  }
   @media (max-width:420px){
     .doc{ padding:36px 16px 56px; }
     .thesis{ max-width:100%; }
@@ -508,6 +587,140 @@
 
   </div>
 </main>
+
+<div class="cad-crosshair" id="crosshair"><div class="h-line"></div><div class="v-line"></div></div>
+<div class="cad-hud" id="hud"><span class="lbl">X</span> 0000 &nbsp; <span class="lbl">Y</span> 0000</div>
+
+<div class="cmdk-launcher" id="cmdkLauncher">⌘/Ctrl <kbd>K</kbd> — quick jump</div>
+
+<div class="cmdk-overlay" id="cmdkOverlay">
+  <div class="cmdk-box">
+    <input type="text" class="cmdk-input" id="cmdkInput" placeholder="Jump to a section, or run a command…" autocomplete="off">
+    <div class="cmdk-list" id="cmdkList"></div>
+    <div class="cmdk-hint">↑↓ navigate · ↵ select · esc close</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+  /* ---- CAD crosshair + coordinate HUD ---- */
+  if (fine){
+    var crosshair = document.getElementById('crosshair');
+    var hud = document.getElementById('hud');
+    var hLine = crosshair.querySelector('.h-line');
+    var vLine = crosshair.querySelector('.v-line');
+    var raf = null, lastX = 0, lastY = 0, shown = false;
+
+    document.addEventListener('mousemove', function(e){
+      lastX = e.clientX; lastY = e.clientY;
+      if (!shown){ crosshair.classList.add('live'); hud.classList.add('live'); shown = true; }
+      if (raf) return;
+      raf = requestAnimationFrame(function(){
+        hLine.style.top = lastY + 'px';
+        vLine.style.left = lastX + 'px';
+        hud.innerHTML = '<span class="lbl">X</span> ' + String(lastX).padStart(4,'0') +
+                         ' &nbsp; <span class="lbl">Y</span> ' + String(lastY).padStart(4,'0');
+        raf = null;
+      });
+    });
+    document.addEventListener('mouseleave', function(){
+      crosshair.classList.remove('live'); hud.classList.remove('live'); shown = false;
+    });
+  } else {
+    document.getElementById('crosshair').style.display = 'none';
+    document.getElementById('hud').style.display = 'none';
+  }
+
+  /* ---- Active section highlight in rail nav ---- */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.rail-nav a'));
+  var sections = navLinks.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      var idx = sections.indexOf(entry.target);
+      if (idx === -1) return;
+      if (entry.isIntersecting){
+        navLinks.forEach(function(a){ a.classList.remove('active'); });
+        navLinks[idx].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+  sections.forEach(function(s){ if (s) io.observe(s); });
+
+  /* ---- Command palette ---- */
+  var overlay = document.getElementById('cmdkOverlay');
+  var input = document.getElementById('cmdkInput');
+  var list = document.getElementById('cmdkList');
+  var launcher = document.getElementById('cmdkLauncher');
+  var selected = 0;
+
+  var commands = [
+    { label: 'Go to Cover', tag: 'nav', run: function(){ scrollTo('#cover'); } },
+    { label: 'Go to Selected Work', tag: 'nav', run: function(){ scrollTo('#work'); } },
+    { label: 'Go to Capabilities', tag: 'nav', run: function(){ scrollTo('#capabilities'); } },
+    { label: 'Go to Experience', tag: 'nav', run: function(){ scrollTo('#experience'); } },
+    { label: 'Go to Contact', tag: 'nav', run: function(){ scrollTo('#contact'); } },
+    { label: 'Copy email address', tag: 'action', run: function(){ copyText('hassanlight11@gmail.com'); } },
+    { label: 'Copy phone number', tag: 'action', run: function(){ copyText('+974 3045 6488'); } },
+    { label: 'Open LinkedIn', tag: 'link', run: function(){ window.open('https://www.linkedin.com/in/bilal-hassan-783249231', '_blank'); } },
+    { label: 'Send an email', tag: 'link', run: function(){ window.location.href = 'mailto:hassanlight11@gmail.com'; } },
+    { label: 'Call', tag: 'link', run: function(){ window.location.href = 'tel:+97430456488'; } }
+  ];
+
+  function scrollTo(sel){ var el = document.querySelector(sel); if (el) el.scrollIntoView({ behavior:'smooth' }); }
+  function copyText(t){
+    if (navigator.clipboard) navigator.clipboard.writeText(t);
+    var item = list.querySelector('.cmdk-item.sel');
+    if (item){ var orig = item.textContent; item.textContent = 'Copied — ' + t; setTimeout(closeCmdk, 500); }
+  }
+
+  function renderList(filter){
+    var f = (filter || '').toLowerCase();
+    var filtered = commands.filter(function(c){ return c.label.toLowerCase().indexOf(f) !== -1; });
+    list.innerHTML = '';
+    filtered.forEach(function(c, i){
+      var row = document.createElement('div');
+      row.className = 'cmdk-item' + (i === selected ? ' sel' : '');
+      row.innerHTML = '<span>' + c.label + '</span><span class="tag">' + c.tag + '</span>';
+      row.addEventListener('click', function(){ c.run(); closeCmdk(); });
+      list.appendChild(row);
+    });
+    list._filtered = filtered;
+  }
+
+  function openCmdk(){
+    overlay.classList.add('open');
+    input.value = '';
+    selected = 0;
+    renderList('');
+    setTimeout(function(){ input.focus(); }, 50);
+  }
+  function closeCmdk(){
+    overlay.classList.remove('open');
+    input.blur();
+  }
+
+  launcher.addEventListener('click', openCmdk);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) closeCmdk(); });
+  input.addEventListener('input', function(){ selected = 0; renderList(input.value); });
+
+  document.addEventListener('keydown', function(e){
+    var isOpen = overlay.classList.contains('open');
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){
+      e.preventDefault();
+      isOpen ? closeCmdk() : openCmdk();
+      return;
+    }
+    if (!isOpen) return;
+    var filtered = list._filtered || [];
+    if (e.key === 'Escape'){ closeCmdk(); }
+    else if (e.key === 'ArrowDown'){ e.preventDefault(); selected = Math.min(selected + 1, filtered.length - 1); renderList(input.value); }
+    else if (e.key === 'ArrowUp'){ e.preventDefault(); selected = Math.max(selected - 1, 0); renderList(input.value); }
+    else if (e.key === 'Enter'){ e.preventDefault(); if (filtered[selected]){ filtered[selected].run(); closeCmdk(); } }
+  });
+})();
+</script>
 
 </body>
 </html>
