@@ -130,17 +130,30 @@
   section:last-of-type{ padding-bottom:40px; }
 
   /* COVER */
-  #cover{ padding-top:8px; }
-  .cover-grid{ display:grid; grid-template-columns:1fr 240px; gap:48px; align-items:start; }
+  #cover{ padding-top:8px; position:relative; overflow:hidden; }
+  #heroCanvas{ position:absolute; inset:-40px; width:calc(100% + 80px); height:calc(100% + 80px); z-index:0; pointer-events:none; opacity:0.55; }
+  .scan-sweep{
+    position:absolute; left:0; right:0; height:120px; z-index:1; pointer-events:none;
+    background:linear-gradient(180deg, rgba(171,59,46,0) 0%, rgba(171,59,46,0.16) 50%, rgba(171,59,46,0) 100%);
+    top:-120px;
+    animation: sweep-down 2.6s ease-out 0.15s 1 both;
+  }
+  @keyframes sweep-down{
+    0%{ top:-120px; opacity:0; }
+    12%{ opacity:1; }
+    85%{ opacity:1; }
+    100%{ top:100%; opacity:0; }
+  }
+  .cover-grid{ position:relative; z-index:2; display:grid; grid-template-columns:1fr 320px; gap:40px; align-items:start; }
   .portrait-wrap{ position:relative; }
-  .portrait-frame{ position:relative; padding:14px; }
+  .portrait-frame{ position:relative; padding:8px; }
   .portrait-frame .corner{ position:absolute; width:16px; height:16px; }
   .portrait-frame .corner.tl{ top:0; left:0; border-top:1px solid var(--muted); border-left:1px solid var(--muted); }
   .portrait-frame .corner.tr{ top:0; right:0; border-top:1px solid var(--muted); border-right:1px solid var(--muted); }
   .portrait-frame .corner.bl{ bottom:0; left:0; border-bottom:1px solid var(--muted); border-left:1px solid var(--muted); }
   .portrait-frame .corner.br{ bottom:0; right:0; border-bottom:1px solid var(--muted); border-right:1px solid var(--muted); }
   .portrait{
-    width:100%; aspect-ratio:1/1; object-fit:cover; object-position:top;
+    width:100%; aspect-ratio:4/5; object-fit:cover; object-position:top;
     filter:grayscale(35%) contrast(1.08) brightness(0.96);
   }
   .portrait-cap{
@@ -250,7 +263,7 @@
     .dossier-row{ grid-template-columns:64px 1fr; gap:14px; }
     .dossier-thumb{ width:64px; height:64px; }
     .cover-grid{ grid-template-columns:1fr; }
-    .cover-grid .portrait-wrap{ width:180px; order:-1; margin-bottom:12px; }
+    .cover-grid .portrait-wrap{ width:200px; order:-1; margin-bottom:12px; }
   }
   @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
 
@@ -319,7 +332,10 @@
     .rail-nav a, .dossier-row, .service-line, .parts-list div, .contact-list a, .spec-item, .dossier-thumb, .portrait-frame{
       transition:none !important; transform:none !important;
     }
+    .scan-sweep{ animation:none !important; display:none; }
+    #heroCanvas{ display:none; }
   }
+  .scramble-char{ display:inline-block; }
 
   .theme-toggle{
     display:flex; align-items:center; gap:6px;
@@ -424,7 +440,7 @@
     .dossier-thumb{ width:56px; height:56px; }
     .dossier-h{ gap:6px; }
     .contact-list a, .contact-list div{ font-size:15px; flex-wrap:wrap; }
-    .cover-grid .portrait-wrap{ width:130px; }
+    .cover-grid .portrait-wrap{ width:150px; }
     section{ padding-bottom:56px; }
   }
 </style>
@@ -460,9 +476,11 @@
   <div class="doc">
 
     <section id="cover">
+      <canvas id="heroCanvas"></canvas>
+      <div class="scan-sweep"></div>
       <div class="cover-grid">
         <div>
-          <h1 class="thesis">Trained to build machines. Now I build <span class="accent">software.</span></h1>
+          <h1 class="thesis" id="thesisText">Trained to build machines. Now I build <span class="accent">software.</span></h1>
           <p class="sub">I run Layal Digital in Doha, Qatar, and co-founded Wrapify Solutions in Islamabad, Pakistan. Both studios do the same kind of work: Flutter apps, full stack web platforms and the AI automation systems that quietly handle a business's repetitive tasks in the background. I also take on freelance client work through Upwork. Before any of this, I studied mechanical engineering, and the habits from that degree never really left. I still define the spec before touching the keyboard, respect the constraints of whatever I am building, and test it properly before anyone has to trust it.</p>
 
           <div class="spec-strip">
@@ -666,6 +684,155 @@
 <script>
 (function(){
   var fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Kinetic headline reveal (scramble-to-resolve) ---- */
+  if (!reduceMotion){
+    (function scrambleHeadline(){
+      var el = document.getElementById('thesisText');
+      if (!el) return;
+      var glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890#/*+·';
+
+      function wrapChars(node){
+        if (node.nodeType === 3){
+          var frag = document.createDocumentFragment();
+          node.textContent.split('').forEach(function(ch){
+            if (ch === ' '){ frag.appendChild(document.createTextNode(' ')); return; }
+            var span = document.createElement('span');
+            span.className = 'scramble-char';
+            span.setAttribute('data-final', ch);
+            span.textContent = ch;
+            frag.appendChild(span);
+          });
+          node.parentNode.replaceChild(frag, node);
+        } else if (node.nodeType === 1){
+          Array.prototype.slice.call(node.childNodes).forEach(wrapChars);
+        }
+      }
+      Array.prototype.slice.call(el.childNodes).forEach(wrapChars);
+
+      var chars = el.querySelectorAll('.scramble-char');
+      chars.forEach(function(span, i){
+        var final = span.getAttribute('data-final');
+        var maxIter = 7 + Math.floor(Math.random() * 5);
+        var iter = 0;
+        setTimeout(function(){
+          var timer = setInterval(function(){
+            span.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+            iter++;
+            if (iter >= maxIter){
+              clearInterval(timer);
+              span.textContent = final;
+            }
+          }, 26);
+        }, i * 18);
+      });
+    })();
+  }
+
+  /* ---- Hero constellation canvas ---- */
+  (function heroCanvas(){
+    var canvas = document.getElementById('heroCanvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var section = document.getElementById('cover');
+    var nodes = [];
+    var raf = null;
+    var running = false;
+    var mouse = { x: -9999, y: -9999 };
+    var DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+    function themeColor(varName, fallback){
+      var v = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+      return v || fallback;
+    }
+
+    function resize(){
+      var rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * DPR;
+      canvas.height = rect.height * DPR;
+      var count = window.innerWidth < 900 ? 22 : 42;
+      nodes = [];
+      for (var i = 0; i < count; i++){
+        nodes.push({
+          x: Math.random() * rect.width,
+          y: Math.random() * rect.height,
+          vx: (Math.random() - 0.5) * 0.15,
+          vy: (Math.random() - 0.5) * 0.15
+        });
+      }
+    }
+
+    function draw(){
+      var rect = canvas.getBoundingClientRect();
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      var muted = themeColor('--muted', '147,141,132');
+      var red = themeColor('--red', '171,59,46');
+      var lineRGB = '148,141,132';
+      var redRGB = red.indexOf('#') === 0 ? hexToRgb(red) : red;
+
+      nodes.forEach(function(n){
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > rect.width) n.vx *= -1;
+        if (n.y < 0 || n.y > rect.height) n.vy *= -1;
+      });
+
+      for (var i = 0; i < nodes.length; i++){
+        for (var j = i + 1; j < nodes.length; j++){
+          var dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+          var dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 130){
+            ctx.strokeStyle = 'rgba(' + lineRGB + ',' + (0.12 * (1 - dist/130)) + ')';
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
+          }
+        }
+        var mdx = nodes[i].x - mouse.x, mdy = nodes[i].y - mouse.y;
+        var mdist = Math.sqrt(mdx*mdx + mdy*mdy);
+        if (mdist < 160){
+          ctx.strokeStyle = 'rgba(' + redRGB + ',' + (0.35 * (1 - mdist/160)) + ')';
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+        }
+        ctx.fillStyle = 'rgba(' + lineRGB + ',0.5)';
+        ctx.beginPath(); ctx.arc(nodes[i].x, nodes[i].y, 1.4, 0, Math.PI*2); ctx.fill();
+      }
+
+      if (running) raf = requestAnimationFrame(draw);
+    }
+
+    function hexToRgb(hex){
+      hex = hex.replace('#','');
+      var r = parseInt(hex.substring(0,2),16), g = parseInt(hex.substring(2,4),16), b = parseInt(hex.substring(4,6),16);
+      return r + ',' + g + ',' + b;
+    }
+
+    function start(){ if (running) return; running = true; raf = requestAnimationFrame(draw); }
+    function stop(){ running = false; if (raf) cancelAnimationFrame(raf); }
+
+    resize();
+    if (!reduceMotion){
+      start();
+      var io2 = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ e.isIntersecting ? start() : stop(); });
+      }, { threshold: 0 });
+      io2.observe(section);
+    } else {
+      draw(); // render a single static frame, no loop
+    }
+
+    window.addEventListener('resize', resize);
+    if (fine){
+      section.addEventListener('mousemove', function(e){
+        var rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+      section.addEventListener('mouseleave', function(){ mouse.x = -9999; mouse.y = -9999; });
+    }
+  })();
 
   /* ---- Theme toggle ---- */
   var root = document.documentElement;
