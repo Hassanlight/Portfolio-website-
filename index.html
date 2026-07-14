@@ -214,6 +214,88 @@
     .cover-grid .portrait-wrap{ width:180px; order:-1; margin-bottom:12px; }
   }
   @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
+  /* ============ LIQUID GLASS HOVER LAYER ============ */
+  /* Applied only on devices that actually support hover, so touch doesn't get stuck states */
+  @media (hover:hover) and (pointer:fine){
+    .rail-nav a, .dossier-row, .service-line, .parts-list div, .contact-list a, .spec-item{
+      transition: background .4s ease, border-color .4s ease, transform .3s ease, box-shadow .4s ease;
+      border-radius:3px;
+    }
+
+    .rail-nav a:hover{
+      background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02));
+      backdrop-filter: blur(6px) saturate(140%);
+      -webkit-backdrop-filter: blur(6px) saturate(140%);
+      padding-left:10px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .dossier-row:hover{
+      background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012));
+      backdrop-filter: blur(10px) saturate(150%);
+      -webkit-backdrop-filter: blur(10px) saturate(150%);
+      border-color: rgba(171,59,46,0.4);
+      transform: translateX(6px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .dossier-row:hover .dossier-thumb{ transform:scale(1.05); filter:brightness(1.08); }
+    .dossier-thumb{ transition: transform .5s ease, filter .5s ease; }
+    .dossier-row:hover h3{ color:var(--paper); }
+    .dossier-row:hover .dossier-idx{ transform:translateX(2px); }
+    .dossier-idx{ transition: transform .3s ease; display:inline-block; }
+
+    .service-line:hover, .parts-list div:hover{
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+      backdrop-filter: blur(8px) saturate(140%);
+      -webkit-backdrop-filter: blur(8px) saturate(140%);
+      border-color: rgba(171,59,46,0.3);
+      padding-left:10px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .spec-item:hover{
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+      backdrop-filter: blur(8px) saturate(140%);
+      -webkit-backdrop-filter: blur(8px) saturate(140%);
+      padding-left:10px;
+    }
+
+    .contact-list a:hover{
+      background: linear-gradient(135deg, rgba(171,59,46,0.12), rgba(255,255,255,0.02));
+      backdrop-filter: blur(10px) saturate(150%);
+      -webkit-backdrop-filter: blur(10px) saturate(150%);
+      padding-left:14px;
+      color:var(--paper);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .portrait-frame{ transition: box-shadow .4s ease; }
+    .cover-grid:hover .portrait-frame{
+      box-shadow: 0 0 0 1px rgba(171,59,46,0.25), 0 16px 40px rgba(0,0,0,0.35);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .rail-nav a, .dossier-row, .service-line, .parts-list div, .contact-list a, .spec-item, .dossier-thumb, .portrait-frame{
+      transition:none !important; transform:none !important;
+    }
+  }
+
+  /* ============ EXTRA SMALL SCREENS ============ */
+  @media (max-width:420px){
+    .doc{ padding:36px 16px 56px; }
+    .thesis{ max-width:100%; }
+    .sub{ font-size:15.5px; }
+    .spec-strip{ flex-direction:column; }
+    .spec-item{ padding:14px 0; }
+    .dossier-row{ grid-template-columns:56px 1fr; gap:12px; padding:18px 0; }
+    .dossier-thumb{ width:56px; height:56px; }
+    .dossier-h{ gap:6px; }
+    .contact-list a, .contact-list div{ font-size:15px; flex-wrap:wrap; }
+    .cover-grid .portrait-wrap{ width:130px; }
+    section{ padding-bottom:56px; }
+  }
 </style>
 </head>
 <body>
