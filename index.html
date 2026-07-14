@@ -2,6 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('theme');
+    if(!t){ t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; }
+    if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); }
+  }catch(e){}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bilal Hassan — Full-Stack &amp; AI Automation Engineer</title>
 <meta name="description" content="Bilal Hassan — Layal Digital. Full-stack development and AI automation, Doha, Qatar.">
@@ -34,6 +43,25 @@
     --paper:#EDEAE4;
     --muted:#938D84;
     --red:#AB3B2E;
+    --glass-rgb: 255,255,255;
+    --surface-rgb: 28,27,27;
+    --overlay-rgb: 10,10,10;
+    color-scheme: dark;
+  }
+  html[data-theme="light"]{
+    --black:#F2EFE8;
+    --black-2:#E7E2D7;
+    --line: rgba(20,18,15,0.13);
+    --paper:#181614;
+    --muted:#726C60;
+    --red:#96382C;
+    --glass-rgb: 20,18,15;
+    --surface-rgb: 233,229,220;
+    --overlay-rgb: 255,255,255;
+    color-scheme: light;
+  }
+  html[data-theme="light"] .portrait{
+    filter:grayscale(15%) contrast(1.02) brightness(1);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
@@ -44,6 +72,7 @@
     font-size:16px;
     line-height:1.65;
     -webkit-font-smoothing:antialiased;
+    transition: background-color .35s ease, color .35s ease;
   }
   ::selection{ background:var(--red); color:var(--paper); }
   a{ color:inherit; text-decoration:none; }
@@ -224,20 +253,20 @@
     }
 
     .rail-nav a:hover{
-      background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02));
+      background: linear-gradient(135deg, rgba(var(--glass-rgb),0.09), rgba(var(--glass-rgb),0.02));
       backdrop-filter: blur(6px) saturate(140%);
       -webkit-backdrop-filter: blur(6px) saturate(140%);
       padding-left:10px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      box-shadow: inset 0 1px 0 rgba(var(--glass-rgb),0.06);
     }
 
     .dossier-row:hover{
-      background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012));
+      background: linear-gradient(135deg, rgba(var(--glass-rgb),0.055), rgba(var(--glass-rgb),0.012));
       backdrop-filter: blur(10px) saturate(150%);
       -webkit-backdrop-filter: blur(10px) saturate(150%);
       border-color: rgba(171,59,46,0.4);
       transform: translateX(6px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 24px rgba(0,0,0,0.25);
+      box-shadow: inset 0 1px 0 rgba(var(--glass-rgb),0.05), 0 8px 24px rgba(0,0,0,0.25);
     }
     .dossier-row:hover .dossier-thumb{ transform:scale(1.05); filter:brightness(1.08); }
     .dossier-thumb{ transition: transform .5s ease, filter .5s ease; }
@@ -246,28 +275,28 @@
     .dossier-idx{ transition: transform .3s ease; display:inline-block; }
 
     .service-line:hover, .parts-list div:hover{
-      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+      background: linear-gradient(135deg, rgba(var(--glass-rgb),0.05), rgba(var(--glass-rgb),0.01));
       backdrop-filter: blur(8px) saturate(140%);
       -webkit-backdrop-filter: blur(8px) saturate(140%);
       border-color: rgba(171,59,46,0.3);
       padding-left:10px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+      box-shadow: inset 0 1px 0 rgba(var(--glass-rgb),0.05);
     }
 
     .spec-item:hover{
-      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+      background: linear-gradient(135deg, rgba(var(--glass-rgb),0.05), rgba(var(--glass-rgb),0.01));
       backdrop-filter: blur(8px) saturate(140%);
       -webkit-backdrop-filter: blur(8px) saturate(140%);
       padding-left:10px;
     }
 
     .contact-list a:hover{
-      background: linear-gradient(135deg, rgba(171,59,46,0.12), rgba(255,255,255,0.02));
+      background: linear-gradient(135deg, rgba(171,59,46,0.12), rgba(var(--glass-rgb),0.02));
       backdrop-filter: blur(10px) saturate(150%);
       -webkit-backdrop-filter: blur(10px) saturate(150%);
       padding-left:14px;
       color:var(--paper);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      box-shadow: inset 0 1px 0 rgba(var(--glass-rgb),0.06);
     }
 
     .portrait-frame{ transition: box-shadow .4s ease; }
@@ -280,6 +309,19 @@
     .rail-nav a, .dossier-row, .service-line, .parts-list div, .contact-list a, .spec-item, .dossier-thumb, .portrait-frame{
       transition:none !important; transform:none !important;
     }
+  }
+
+  .theme-toggle{
+    display:flex; align-items:center; gap:6px;
+    background:transparent; border:1px solid var(--line); color:var(--muted);
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.03em;
+    padding:6px 10px; cursor:pointer; margin:4px 0 20px;
+    transition: border-color .25s ease, color .25s ease;
+  }
+  .theme-toggle:hover{ border-color:rgba(171,59,46,0.5); color:var(--paper); }
+  .theme-icon{ font-size:12px; }
+  @media (max-width:900px){
+    .theme-toggle{ margin:0; order:1; }
   }
 
   /* ============ ACTIVE NAV STATE ============ */
@@ -306,7 +348,7 @@
   .cad-hud{
     position:fixed; bottom:18px; right:18px; z-index:200;
     font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--muted);
-    background:rgba(28,27,27,0.7);
+    background:rgba(var(--surface-rgb),0.7);
     backdrop-filter:blur(10px) saturate(140%); -webkit-backdrop-filter:blur(10px) saturate(140%);
     border:1px solid var(--line); padding:8px 12px;
     opacity:0; transition:opacity .3s ease; letter-spacing:0.03em;
@@ -320,7 +362,7 @@
   .cmdk-launcher{
     position:fixed; bottom:18px; left:18px; z-index:200;
     font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--muted);
-    background:rgba(28,27,27,0.7);
+    background:rgba(var(--surface-rgb),0.7);
     backdrop-filter:blur(10px) saturate(140%); -webkit-backdrop-filter:blur(10px) saturate(140%);
     border:1px solid var(--line); padding:8px 12px;
     cursor:pointer; letter-spacing:0.03em;
@@ -331,7 +373,7 @@
 
   .cmdk-overlay{
     position:fixed; inset:0; z-index:300;
-    background:rgba(10,10,10,0.55);
+    background:rgba(var(--overlay-rgb),0.55);
     backdrop-filter:blur(4px);
     display:flex; align-items:flex-start; justify-content:center;
     padding-top:14vh;
@@ -340,10 +382,10 @@
   .cmdk-overlay.open{ opacity:1; pointer-events:auto; }
   .cmdk-box{
     width:min(560px, 88vw);
-    background:rgba(28,27,27,0.85);
+    background:rgba(var(--surface-rgb),0.85);
     backdrop-filter:blur(18px) saturate(160%); -webkit-backdrop-filter:blur(18px) saturate(160%);
     border:1px solid var(--line);
-    box-shadow:0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
+    box-shadow:0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(var(--glass-rgb),0.06);
   }
   .cmdk-input{
     width:100%; background:transparent; border:none; border-bottom:1px solid var(--line);
@@ -381,6 +423,9 @@
 
 <nav class="rail" aria-label="Primary">
   <div class="rail-name">Bilal Hassan</div>
+  <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false">
+    <span class="theme-icon">☾</span><span class="theme-label">Dark</span>
+  </button>
   <div class="rail-role">Layal Digital</div>
 
   <div class="rail-field">Location</div>
@@ -604,6 +649,28 @@
 <script>
 (function(){
   var fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+  /* ---- Theme toggle ---- */
+  var root = document.documentElement;
+  var themeBtn = document.getElementById('themeToggle');
+  var themeLabel = themeBtn.querySelector('.theme-label');
+  var themeIcon = themeBtn.querySelector('.theme-icon');
+
+  function reflectTheme(){
+    var isLight = root.getAttribute('data-theme') === 'light';
+    themeBtn.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+    themeLabel.textContent = isLight ? 'Light' : 'Dark';
+    themeIcon.textContent = isLight ? '☀' : '☾';
+  }
+  reflectTheme();
+
+  themeBtn.addEventListener('click', function(){
+    var isLight = root.getAttribute('data-theme') === 'light';
+    if (isLight){ root.removeAttribute('data-theme'); }
+    else { root.setAttribute('data-theme','light'); }
+    try{ localStorage.setItem('theme', isLight ? 'dark' : 'light'); }catch(e){}
+    reflectTheme();
+  });
 
   /* ---- CAD crosshair + coordinate HUD ---- */
   if (fine){
