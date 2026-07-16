@@ -115,7 +115,7 @@
 
   /* ============ MAIN DOC ============ */
   main{ margin-left:264px; }
-  .doc{ max-width:760px; padding:72px 56px 100px; }
+  .doc{ max-width:1040px; padding:72px 56px 100px; }
 
   .foldline{
     display:flex; align-items:center; gap:14px;
@@ -223,6 +223,17 @@
   .dossier-tags span:first-child::before{ content:''; }
   .dossier-meta{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--red); white-space:nowrap; padding-top:2px; }
   .work-note{ color:var(--muted); font-size:13.5px; margin-top:24px; }
+
+  /* ---- Timed card-opening reveal ---- */
+  #work .dossier-row{
+    opacity:0;
+    transform: translateY(18px) scale(0.96);
+    transition: opacity .55s cubic-bezier(.2,.7,.3,1), transform .55s cubic-bezier(.2,.7,.3,1);
+  }
+  #work .dossier-row.opened{ opacity:1; transform:translateY(0) scale(1); }
+  @media (prefers-reduced-motion: reduce){
+    #work .dossier-row{ opacity:1; transform:none; transition:none; }
+  }
 
   /* CAPABILITIES */
   .cap-sub{ font-size:12px; font-family:'IBM Plex Mono', monospace; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin:28px 0 4px; }
@@ -631,27 +642,6 @@
           <p class="dossier-desc">Al Eteqaq Law Firm, Doha · Coordinated operations and supported internal case-management tooling.</p>
         </div>
       </div>
-      <div class="dossier-row" style="grid-template-columns:52px 1fr;">
-        <div class="dossier-idx">—</div>
-        <div>
-          <div class="dossier-h"><h3>Retail Supervisor</h3></div>
-          <p class="dossier-desc">Al Meera Consumer Goods, Qatar · Supervised store operations, staff, and inventory.</p>
-        </div>
-      </div>
-      <div class="dossier-row" style="grid-template-columns:52px 1fr;">
-        <div class="dossier-idx">—</div>
-        <div>
-          <div class="dossier-h"><h3>Store Manager</h3></div>
-          <p class="dossier-desc">Imtiaz Mart, Pakistan · Day-to-day store management, staffing, and stock.</p>
-        </div>
-      </div>
-      <div class="dossier-row" style="grid-template-columns:52px 1fr;">
-        <div class="dossier-idx">—</div>
-        <div>
-          <div class="dossier-h"><h3>Customer Support Representative</h3></div>
-          <p class="dossier-desc">Smart Brains &amp; Touchstone Communications · Inbound and outbound call-centre operations.</p>
-        </div>
-      </div>
     </section>
 
     <section id="contact">
@@ -696,13 +686,22 @@
       function wrapChars(node){
         if (node.nodeType === 3){
           var frag = document.createDocumentFragment();
-          node.textContent.split('').forEach(function(ch){
-            if (ch === ' '){ frag.appendChild(document.createTextNode(' ')); return; }
-            var span = document.createElement('span');
-            span.className = 'scramble-char';
-            span.setAttribute('data-final', ch);
-            span.textContent = ch;
-            frag.appendChild(span);
+          var words = node.textContent.split(' ');
+          words.forEach(function(word, wi){
+            if (word.length){
+              var wordSpan = document.createElement('span');
+              wordSpan.style.display = 'inline-block';
+              wordSpan.style.whiteSpace = 'nowrap';
+              word.split('').forEach(function(ch){
+                var span = document.createElement('span');
+                span.className = 'scramble-char';
+                span.setAttribute('data-final', ch);
+                span.textContent = ch;
+                wordSpan.appendChild(span);
+              });
+              frag.appendChild(wordSpan);
+            }
+            if (wi < words.length - 1){ frag.appendChild(document.createTextNode(' ')); }
           });
           node.parentNode.replaceChild(frag, node);
         } else if (node.nodeType === 1){
@@ -883,6 +882,26 @@
     document.getElementById('crosshair').style.display = 'none';
     document.getElementById('hud').style.display = 'none';
   }
+
+  /* ---- Timed card opening (Selected Work) ---- */
+  (function timedCardOpening(){
+    var workRows = Array.prototype.slice.call(document.querySelectorAll('#work .dossier-row'));
+    if (!workRows.length) return;
+    if (reduceMotion){ workRows.forEach(function(r){ r.classList.add('opened'); }); return; }
+    var triggered = false;
+    var io3 = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting && !triggered){
+          triggered = true;
+          workRows.forEach(function(row, i){
+            setTimeout(function(){ row.classList.add('opened'); }, i * 140);
+          });
+          io3.disconnect();
+        }
+      });
+    }, { threshold: 0.15 });
+    io3.observe(document.getElementById('work'));
+  })();
 
   /* ---- Active section highlight in rail nav ---- */
   var navLinks = Array.prototype.slice.call(document.querySelectorAll('.rail-nav a'));
