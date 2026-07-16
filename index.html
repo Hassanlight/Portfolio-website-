@@ -222,17 +222,57 @@
   .dossier-tags span::before{ content:'· '; color:var(--red); }
   .dossier-tags span:first-child::before{ content:''; }
   .dossier-meta{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--red); white-space:nowrap; padding-top:2px; }
-  .work-note{ color:var(--muted); font-size:13.5px; margin-top:24px; }
+  .work-note{ color:var(--muted); font-size:13.5px; margin-top:20px; }
 
-  /* ---- Timed card-opening reveal ---- */
-  #work .dossier-row{
-    opacity:0;
-    transform: translateY(18px) scale(0.96);
-    transition: opacity .55s cubic-bezier(.2,.7,.3,1), transform .55s cubic-bezier(.2,.7,.3,1);
+  /* ---- Timed card-opening carousel (Selected Work) ---- */
+  .work-carousel-wrap{ position:relative; }
+  .work-carousel{
+    display:flex; gap:14px;
+    overflow-x:auto; scroll-snap-type:x proximity;
+    padding-bottom:6px; margin:0 -4px;
+    scrollbar-width:thin;
   }
-  #work .dossier-row.opened{ opacity:1; transform:translateY(0) scale(1); }
+  .work-carousel::-webkit-scrollbar{ height:5px; }
+  .work-carousel::-webkit-scrollbar-thumb{ background:var(--line); }
+  .work-card{
+    position:relative; flex:0 0 250px; height:330px;
+    overflow:hidden; border:1px solid var(--line);
+    scroll-snap-align:start;
+    opacity:0; transform:translateX(50px) scale(0.94);
+    transition:opacity .6s cubic-bezier(.2,.7,.3,1), transform .6s cubic-bezier(.2,.7,.3,1);
+  }
+  .work-card.opened{ opacity:1; transform:translateX(0) scale(1); }
+  .work-card img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    filter:grayscale(20%) brightness(0.7) contrast(1.05);
+    transition:transform .6s ease, filter .6s ease;
+  }
+  .work-card-overlay{
+    position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end;
+    padding:16px; background:linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.82) 100%);
+  }
+  .work-card-tag{
+    font-family:'IBM Plex Mono', monospace; font-size:9.5px; color:var(--red);
+    text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;
+  }
+  .work-card h3{ font-size:16px; font-weight:600; color:#EDEAE4; margin-bottom:6px; }
+  .work-card p{ font-size:12px; color:rgba(237,234,228,0.75); line-height:1.4; }
+  @media (hover:hover) and (pointer:fine){
+    .work-card:hover img{ transform:scale(1.06); filter:grayscale(5%) brightness(0.8) contrast(1.05); }
+  }
+  .work-counter{
+    position:absolute; bottom:14px; right:14px; z-index:2;
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--paper);
+    background:rgba(var(--surface-rgb),0.75);
+    backdrop-filter:blur(8px) saturate(140%); -webkit-backdrop-filter:blur(8px) saturate(140%);
+    border:1px solid var(--line); padding:5px 10px; letter-spacing:0.04em;
+    pointer-events:none;
+  }
+  @media (max-width:900px){
+    .work-card{ flex:0 0 210px; height:280px; }
+  }
   @media (prefers-reduced-motion: reduce){
-    #work .dossier-row{ opacity:1; transform:none; transition:none; }
+    .work-card{ opacity:1; transform:none; transition:none; }
   }
 
   /* CAPABILITIES */
@@ -520,58 +560,65 @@
     <section id="work">
       <div class="foldline"><span class="n">02</span> Selected work</div>
 
-      <div class="dossier-row">
-        <img class="dossier-thumb" src="assets/sehatkebaat.jpg" alt="Sehat Ke Baat healthcare app screens">
-        <div>
-          <div class="dossier-h"><h3>Sehat Ke Baat</h3><span class="dossier-status">Upwork · Client build</span></div>
-          <p class="dossier-desc">A healthcare app for finding verified doctors nearby, booking an appointment in one tap and ordering medicine online with fast delivery.</p>
-          <div class="dossier-tags"><span>Flutter</span><span>Healthcare</span><span>100+ screens</span></div>
-        </div>
-      </div>
+      <div class="work-carousel-wrap">
+        <div class="work-carousel" id="workCarousel">
 
-      <div class="dossier-row">
-        <img class="dossier-thumb" src="assets/ondemand_marketplace.jpg" alt="HandyQ on-demand services app screens">
-        <div>
-          <div class="dossier-h"><h3>HandyQ</h3><span class="dossier-status">Upwork · Client build</span></div>
-          <p class="dossier-desc">An on demand services marketplace app built around simple category browsing, task booking and provider discovery in one mobile flow.</p>
-          <div class="dossier-tags"><span>Flutter</span><span>Marketplace</span><span>iOS &amp; Android</span></div>
-        </div>
-      </div>
+          <div class="work-card">
+            <img src="assets/sehatkebaat.jpg" alt="Sehat Ke Baat healthcare app screens">
+            <div class="work-card-overlay">
+              <span class="work-card-tag">Upwork · Healthcare</span>
+              <h3>Sehat Ke Baat</h3>
+              <p>Find verified doctors nearby, book in one tap, order medicine with fast delivery.</p>
+            </div>
+          </div>
 
-      <div class="dossier-row">
-        <img class="dossier-thumb" src="assets/stag_nfc.jpg" alt="Stag NFC digital business card app screens">
-        <div>
-          <div class="dossier-h"><h3>Stag NFC</h3><span class="dossier-status">Upwork · Client build</span></div>
-          <p class="dossier-desc">A digital business card app. Tap an NFC card and it instantly shares a personal profile, contact details and social links with anyone nearby.</p>
-          <div class="dossier-tags"><span>Flutter</span><span>NFC</span><span>Networking</span></div>
-        </div>
-      </div>
+          <div class="work-card">
+            <img src="assets/ondemand_marketplace.jpg" alt="HandyQ on-demand services app screens">
+            <div class="work-card-overlay">
+              <span class="work-card-tag">Upwork · Marketplace</span>
+              <h3>HandyQ</h3>
+              <p>On demand services marketplace, category browsing to provider discovery in one flow.</p>
+            </div>
+          </div>
 
-      <div class="dossier-row">
-        <img class="dossier-thumb" src="assets/pandorabiz.jpg" alt="PandoraBiz e-commerce app screens">
-        <div>
-          <div class="dossier-h"><h3>PandoraBiz</h3><span class="dossier-status">Upwork · Client build</span></div>
-          <p class="dossier-desc">E-commerce app combining a full product catalog with mentorship content, films, and articles in one shopping experience.</p>
-          <div class="dossier-tags"><span>Flutter</span><span>E-commerce</span></div>
-        </div>
-      </div>
+          <div class="work-card">
+            <img src="assets/stag_nfc.jpg" alt="Stag NFC digital business card app screens">
+            <div class="work-card-overlay">
+              <span class="work-card-tag">Upwork · NFC</span>
+              <h3>Stag NFC</h3>
+              <p>Tap an NFC card, instantly share a profile, contact details and social links.</p>
+            </div>
+          </div>
 
-      <div class="dossier-row">
-        <img class="dossier-thumb" src="assets/construction_estimating.jpg" alt="Aussie Takeoff construction estimating platform screens">
-        <div>
-          <div class="dossier-h"><h3>Aussie Takeoff</h3><span class="dossier-status">Upwork · Client build</span></div>
-          <p class="dossier-desc">A construction estimating platform built for winning bids, providing standards compliant estimating for projects across Australia, New Zealand and Pakistan.</p>
-          <div class="dossier-tags"><span>Full-stack web</span><span>Construction tech</span></div>
-        </div>
-      </div>
+          <div class="work-card">
+            <img src="assets/pandorabiz.jpg" alt="PandoraBiz e-commerce app screens">
+            <div class="work-card-overlay">
+              <span class="work-card-tag">Upwork · E-commerce</span>
+              <h3>PandoraBiz</h3>
+              <p>A product catalog combined with mentorship content in one shopping experience.</p>
+            </div>
+          </div>
 
-      <div class="dossier-row">
-        <img class="dossier-thumb" src="assets/pyncode.jpg" alt="Pyncode AI-powered digital solutions website">
-        <div>
-          <div class="dossier-h"><h3>Pyncode</h3><span class="dossier-status">Upwork · Client build</span></div>
-          <p class="dossier-desc">A marketing site for an AI automation and software development studio, covering service pages, consultation booking and the brand system behind it.</p>
-          <div class="dossier-tags"><span>Web design</span><span>AI automation branding</span></div>
+          <div class="work-card">
+            <img src="assets/construction_estimating.jpg" alt="Aussie Takeoff construction estimating platform screens">
+            <div class="work-card-overlay">
+              <span class="work-card-tag">Upwork · Construction tech</span>
+              <h3>Aussie Takeoff</h3>
+              <p>Standards compliant estimating for construction bids across three countries.</p>
+            </div>
+          </div>
+
+          <div class="work-card">
+            <img src="assets/pyncode.jpg" alt="Pyncode AI-powered digital solutions website">
+            <div class="work-card-overlay">
+              <span class="work-card-tag">Upwork · Web design</span>
+              <h3>Pyncode</h3>
+              <p>Marketing site for an AI automation studio, service pages to consultation booking.</p>
+            </div>
+          </div>
+
         </div>
+        <div class="work-counter" id="workCounter">01 / 06</div>
       </div>
 
       <p class="work-note">A curated six from an active Upwork practice spanning healthcare, marketplace, e-commerce, construction technology and NFC apps. More are available on request.</p>
@@ -885,22 +932,44 @@
 
   /* ---- Timed card opening (Selected Work) ---- */
   (function timedCardOpening(){
-    var workRows = Array.prototype.slice.call(document.querySelectorAll('#work .dossier-row'));
-    if (!workRows.length) return;
-    if (reduceMotion){ workRows.forEach(function(r){ r.classList.add('opened'); }); return; }
-    var triggered = false;
-    var io3 = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if (entry.isIntersecting && !triggered){
-          triggered = true;
-          workRows.forEach(function(row, i){
-            setTimeout(function(){ row.classList.add('opened'); }, i * 140);
-          });
-          io3.disconnect();
-        }
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.work-card'));
+    var counter = document.getElementById('workCounter');
+    var carousel = document.getElementById('workCarousel');
+    if (!cards.length) return;
+
+    function updateCounter(){
+      if (!counter || !carousel) return;
+      var center = carousel.scrollLeft + carousel.clientWidth / 2;
+      var closest = 0, closestDist = Infinity;
+      cards.forEach(function(c, i){
+        var mid = c.offsetLeft + c.offsetWidth / 2;
+        var d = Math.abs(mid - center);
+        if (d < closestDist){ closestDist = d; closest = i; }
       });
-    }, { threshold: 0.15 });
-    io3.observe(document.getElementById('work'));
+      counter.textContent = String(closest + 1).padStart(2, '0') + ' / ' + String(cards.length).padStart(2, '0');
+    }
+
+    if (reduceMotion){
+      cards.forEach(function(c){ c.classList.add('opened'); });
+    } else {
+      var triggered = false;
+      var io3 = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting && !triggered){
+            triggered = true;
+            cards.forEach(function(card, i){
+              setTimeout(function(){ card.classList.add('opened'); }, i * 160);
+            });
+            io3.disconnect();
+          }
+        });
+      }, { threshold: 0.15 });
+      io3.observe(document.getElementById('work'));
+    }
+
+    updateCounter();
+    if (carousel){ carousel.addEventListener('scroll', updateCounter, { passive:true }); }
+    window.addEventListener('resize', updateCounter);
   })();
 
   /* ---- Active section highlight in rail nav ---- */
